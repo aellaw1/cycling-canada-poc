@@ -1,7 +1,12 @@
 <%- include('partials/nav') %>
-<main class="container">
-  <h1><%= t(locale, 'audit_log_title') %></h1>
-  <section class="panel">
+
+<div class="page-header">
+  <h1 class="page-title"><i class="fa-solid fa-clipboard-list" style="color:var(--red);margin-right:8px"></i><%= t(locale, 'audit_log_title') %></h1>
+  <p class="page-subtitle"><%= locale === 'fr' ? 'Toutes les actions horodatées pour la conformité PIPEDA' : 'All timestamped actions for PIPEDA compliance' %></p>
+</div>
+
+<div class="card">
+  <div class="card-body table-wrap">
     <table>
       <thead><tr>
         <th><%= t(locale, 'col_when') %></th>
@@ -12,15 +17,21 @@
       <tbody>
       <% logs.forEach(l => { %>
         <tr>
-          <td><%= l.created_at %></td>
-          <td><%= l.first_name ? `${l.first_name} ${l.last_name}` : (l.email || '—') %></td>
-          <td><%= l.action %></td>
-          <td><%= l.entity_type %><%= l.entity_id ? ' #' + l.entity_id : '' %></td>
+          <td><span class="td-muted"><%= l.created_at ? l.created_at.substring(0,19).replace('T',' ') : '' %></span></td>
+          <td class="td-name"><%= l.first_name ? l.first_name + ' ' + l.last_name : (l.email || '—') %></td>
+          <td>
+            <span class="badge <%= l.action === 'login' ? 'badge-green' : l.action === 'logout' ? 'badge-gray' : l.action === 'export' ? 'badge-amber' : 'badge-ptso' %>">
+              <%= l.action %>
+            </span>
+          </td>
+          <td><span class="td-muted"><%= l.entity_type %><%= l.entity_id ? ' #' + l.entity_id : '' %></span></td>
         </tr>
       <% }) %>
-      <% if (!logs.length) { %><tr><td colspan="4" class="muted">—</td></tr><% } %>
+      <% if (!logs.length) { %><tr><td colspan="4" style="text-align:center;padding:32px;color:var(--gray-400)">—</td></tr><% } %>
       </tbody>
     </table>
-  </section>
-  <p class="footer-note"><%= t(locale, 'footer_note') %></p>
-</main>
+  </div>
+</div>
+
+<p class="footer-note"><i class="fa-solid fa-flask"></i> <%= t(locale, 'footer_note') %></p>
+<%- include('partials/footer') %>

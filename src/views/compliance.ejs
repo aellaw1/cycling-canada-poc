@@ -1,7 +1,12 @@
 <%- include('partials/nav') %>
-<main class="container">
-  <h1><%= t(locale, 'compliance_title') %></h1>
-  <section class="panel">
+
+<div class="page-header">
+  <h1 class="page-title"><i class="fa-solid fa-shield-halved" style="color:var(--red);margin-right:8px"></i><%= t(locale, 'compliance_title') %></h1>
+  <p class="page-subtitle"><%= locale === 'fr' ? 'NCCP, Safe Sport et exigences provinciales' : 'NCCP, Safe Sport and provincial requirements' %></p>
+</div>
+
+<div class="card">
+  <div class="card-body table-wrap">
     <table>
       <thead><tr>
         <th><%= t(locale, 'col_name') %></th>
@@ -15,24 +20,28 @@
       <tbody>
       <% records.forEach(r => { %>
         <tr>
-          <td><%= r.first_name %> <%= r.last_name %></td>
+          <td class="td-name"><%= r.first_name %> <%= r.last_name %></td>
           <td><%= locale === 'fr' && r.org_name_fr ? r.org_name_fr : r.org_name_en %></td>
-          <td><%= r.compliance_type %></td>
-          <td><span class="status-badge status-<%= r.status %>"><%= t(locale, r.status) %></span></td>
-          <td><%= r.completed_at || '—' %></td>
-          <td><%= r.expires_at || '—' %></td>
           <td>
-            <% if (r.status === 'pending') { %>
-              <form method="POST" action="/compliance/<%= r.id %>/complete">
-                <button class="btn-secondary" type="submit"><%= t(locale, 'complete') %></button>
-              </form>
-            <% } %>
+            <span class="badge <%= r.compliance_type === 'SAFE_SPORT' ? 'badge-amber' : r.compliance_type === 'NCCP' ? 'badge-ptso' : 'badge-gray' %>">
+              <%= r.compliance_type.replace(/_/g,' ') %>
+            </span>
           </td>
+          <td><span class="badge badge-<%= r.status %>"><%= t(locale, r.status) %></span></td>
+          <td><span class="td-muted"><%= r.completed_at ? r.completed_at.substring(0,10) : '—' %></span></td>
+          <td><span class="td-muted"><%= r.expires_at || '—' %></span></td>
+          <td><% if (r.status === 'pending') { %>
+            <form method="POST" action="/compliance/<%= r.id %>/complete">
+              <button class="btn btn-success btn-sm" type="submit"><i class="fa-solid fa-check"></i> <%= t(locale, 'complete') %></button>
+            </form>
+          <% } %></td>
         </tr>
       <% }) %>
-      <% if (!records.length) { %><tr><td colspan="7" class="muted">—</td></tr><% } %>
+      <% if (!records.length) { %><tr><td colspan="7" style="text-align:center;padding:32px;color:var(--gray-400)">— <%= locale === 'fr' ? 'Aucun enregistrement' : 'No records' %> —</td></tr><% } %>
       </tbody>
     </table>
-  </section>
-  <p class="footer-note"><%= t(locale, 'footer_note') %></p>
-</main>
+  </div>
+</div>
+
+<p class="footer-note"><i class="fa-solid fa-flask"></i> <%= t(locale, 'footer_note') %></p>
+<%- include('partials/footer') %>

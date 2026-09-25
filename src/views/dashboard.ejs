@@ -1,54 +1,71 @@
 <%- include('partials/nav') %>
-<main class="container">
-  <h1><%= t(locale, 'dashboard_title') %></h1>
-  <p class="muted"><%= t(locale, 'dashboard_scope') %>: <strong><%= scopeLabel %></strong></p>
 
-  <div class="kpi-grid">
-    <div class="kpi-card">
-      <div class="kpi-value"><%= kpis.totalMembers %></div>
-      <div class="kpi-label"><%= t(locale, 'kpi_total_members') %></div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-value"><%= kpis.activeMemberships %></div>
-      <div class="kpi-label"><%= t(locale, 'kpi_active_memberships') %></div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-value"><%= fmtMoney(kpis.revenueYtd) %></div>
-      <div class="kpi-label"><%= t(locale, 'kpi_revenue_ytd') %></div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-value"><%= kpis.pendingCompliance %></div>
-      <div class="kpi-label"><%= t(locale, 'kpi_pending_compliance') %></div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-value"><%= kpis.uciIssued %></div>
-      <div class="kpi-label"><%= t(locale, 'kpi_uci_licences') %></div>
-    </div>
+<div class="page-header">
+  <h1 class="page-title"><i class="fa-solid fa-gauge-high" style="color:var(--red);margin-right:8px"></i><%= t(locale, 'dashboard_title') %></h1>
+  <p class="page-subtitle"><%= t(locale, 'dashboard_scope') %>: <strong><%= locals.scopeLabel || '' %></strong></p>
+</div>
+
+<div class="kpi-grid">
+  <div class="kpi-card">
+    <div class="kpi-icon"><i class="fa-solid fa-users"></i></div>
+    <div class="kpi-value"><%= kpis.totalMembers %></div>
+    <div class="kpi-label"><%= t(locale, 'kpi_total_members') %></div>
   </div>
+  <div class="kpi-card">
+    <div class="kpi-icon"><i class="fa-solid fa-id-card"></i></div>
+    <div class="kpi-value"><%= kpis.activeMemberships %></div>
+    <div class="kpi-label"><%= t(locale, 'kpi_active_memberships') %></div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-icon" style="background:var(--green-light);color:var(--green)"><i class="fa-solid fa-money-bill-trend-up"></i></div>
+    <div class="kpi-value"><%= fmtMoney(kpis.revenueYtd) %></div>
+    <div class="kpi-label"><%= t(locale, 'kpi_revenue_ytd') %></div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-icon" style="background:var(--amber-light);color:var(--amber)"><i class="fa-solid fa-triangle-exclamation"></i></div>
+    <div class="kpi-value"><%= kpis.pendingCompliance %></div>
+    <div class="kpi-label"><%= t(locale, 'kpi_pending_compliance') %></div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-icon" style="background:var(--green-light);color:var(--green)"><i class="fa-solid fa-certificate"></i></div>
+    <div class="kpi-value"><%= kpis.uciIssued %></div>
+    <div class="kpi-label"><%= t(locale, 'kpi_uci_licences') %></div>
+  </div>
+</div>
 
-  <% if (childOrgs.length) { %>
-  <section class="panel">
-    <h2><%= t(locale, 'child_orgs') %></h2>
+<% if (childOrgs.length) { %>
+<div class="card">
+  <div class="card-header">
+    <span class="card-title"><i class="fa-solid fa-sitemap" style="color:var(--red);margin-right:8px"></i><%= t(locale, 'child_orgs') %></span>
+    <span class="badge badge-gray"><%= childOrgs.length %> <%= locale === 'fr' ? 'organisations' : 'organizations' %></span>
+  </div>
+  <div class="card-body table-wrap">
     <table>
-      <thead><tr><th><%= t(locale, 'col_name') %></th><th><%= t(locale, 'col_org_type') %></th><th><%= t(locale, 'col_jurisdiction') %></th></tr></thead>
+      <thead><tr>
+        <th><%= t(locale, 'col_name') %></th>
+        <th><%= t(locale, 'col_org_type') %></th>
+        <th><%= t(locale, 'col_jurisdiction') %></th>
+      </tr></thead>
       <tbody>
       <% childOrgs.forEach(o => { %>
         <tr>
-          <td><%= locale === 'fr' && o.name_fr ? o.name_fr : o.name_en %></td>
-          <td><%= o.org_type %></td>
+          <td class="td-name"><%= locale === 'fr' && o.name_fr ? o.name_fr : o.name_en %></td>
+          <td><span class="badge badge-<%= o.org_type.toLowerCase() %>"><%= o.org_type %></span></td>
           <td><%= o.jurisdiction || '—' %></td>
         </tr>
       <% }) %>
       </tbody>
     </table>
-  </section>
-  <% } %>
+  </div>
+</div>
+<% } %>
 
-  <section class="panel">
-    <div class="panel-header">
-      <h2><%= t(locale, 'recent_registrations') %></h2>
-      <a class="btn-secondary" href="/finance/export.csv"><%= t(locale, 'export_csv') %></a>
-    </div>
+<div class="card">
+  <div class="card-header">
+    <span class="card-title"><i class="fa-solid fa-clock-rotate-left" style="color:var(--red);margin-right:8px"></i><%= t(locale, 'recent_registrations') %></span>
+    <a class="btn btn-secondary btn-sm" href="/finance/export.csv"><i class="fa-solid fa-file-csv"></i> <%= t(locale, 'export_csv') %></a>
+  </div>
+  <div class="card-body table-wrap">
     <table>
       <thead><tr>
         <th><%= t(locale, 'col_name') %></th>
@@ -59,16 +76,17 @@
       <tbody>
       <% recentRegistrations.forEach(r => { %>
         <tr>
-          <td><%= r.first_name %> <%= r.last_name %></td>
+          <td class="td-name"><%= r.first_name %> <%= r.last_name %></td>
           <td><%= locale === 'fr' && r.org_name_fr ? r.org_name_fr : r.org_name %></td>
           <td><%= r.season_year %></td>
-          <td><%= t(locale, r.membership_type) %></td>
+          <td><span class="badge badge-gray"><%= t(locale, r.membership_type) %></span></td>
         </tr>
       <% }) %>
-      <% if (!recentRegistrations.length) { %><tr><td colspan="4" class="muted">—</td></tr><% } %>
+      <% if (!recentRegistrations.length) { %><tr><td colspan="4" style="text-align:center;color:var(--gray-400);padding:24px">— <%= locale === 'fr' ? 'Aucune inscription récente' : 'No recent registrations' %> —</td></tr><% } %>
       </tbody>
     </table>
-  </section>
+  </div>
+</div>
 
-  <p class="footer-note"><%= t(locale, 'footer_note') %></p>
-</main>
+<p class="footer-note"><i class="fa-solid fa-flask"></i> <%= t(locale, 'footer_note') %></p>
+<%- include('partials/footer') %>

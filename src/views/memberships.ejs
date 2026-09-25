@@ -1,48 +1,63 @@
 <%- include('partials/nav') %>
-<main class="container">
-  <h1><%= t(locale, 'memberships_title') %></h1>
 
-  <details class="new-form">
-    <summary><%= t(locale, 'new_membership') %></summary>
-    <form method="POST" action="/memberships" class="form-grid">
-      <label><%= t(locale, 'col_name') %>
-        <select name="member_id" required>
-          <% members.forEach(m => { %>
-            <option value="<%= m.id %>"><%= m.first_name %> <%= m.last_name %></option>
-          <% }) %>
-        </select>
-      </label>
-      <label><%= t(locale, 'col_membership_type') %>
-        <select name="membership_type">
-          <option value="individual"><%= t(locale, 'individual') %></option>
-          <option value="family"><%= t(locale, 'family') %></option>
-          <option value="race"><%= t(locale, 'race') %></option>
-          <option value="day_pass"><%= t(locale, 'day_pass') %></option>
-        </select>
-      </label>
-      <label><%= t(locale, 'col_disciplines') %>
-        <select name="discipline_id">
-          <option value="">—</option>
-          <% disciplines.forEach(d => { %>
-            <option value="<%= d.id %>"><%= locale === 'fr' ? d.name_fr : d.name_en %></option>
-          <% }) %>
-        </select>
-      </label>
-      <label><%= t(locale, 'organization') %>
-        <select name="org_id" required>
-          <% clubs.forEach(c => { %>
-            <option value="<%= c.id %>"><%= locale === 'fr' && c.name_fr ? c.name_fr : c.name_en %></option>
-          <% }) %>
-        </select>
-      </label>
-      <label class="checkbox-row">
-        <input type="checkbox" name="waiver_signed" value="1"> <%= t(locale, 'waiver_confirm') %>
-      </label>
-      <div class="form-actions"><button class="btn-primary" type="submit"><%= t(locale, 'save') %></button></div>
+<div class="page-header">
+  <h1 class="page-title"><i class="fa-solid fa-id-card" style="color:var(--red);margin-right:8px"></i><%= t(locale, 'memberships_title') %></h1>
+  <p class="page-subtitle"><%= locale === 'fr' ? 'Adhésions individuelles, familiales et licences UCI' : 'Individual, family memberships and UCI licences' %></p>
+</div>
+
+<details class="form-card">
+  <summary><i class="fa-solid fa-plus-circle"></i> <%= t(locale, 'new_membership') %></summary>
+  <div class="form-body">
+    <form method="POST" action="/memberships">
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label"><%= t(locale, 'col_name') %></label>
+          <select name="member_id" required>
+            <% members.forEach(m => { %><option value="<%= m.id %>"><%= m.first_name %> <%= m.last_name %></option><% }) %>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label"><%= t(locale, 'col_membership_type') %></label>
+          <select name="membership_type">
+            <option value="individual"><%= t(locale, 'individual') %></option>
+            <option value="family"><%= t(locale, 'family') %></option>
+            <option value="race"><%= t(locale, 'race') %></option>
+            <option value="day_pass"><%= t(locale, 'day_pass') %></option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label"><%= t(locale, 'col_disciplines') %></label>
+          <select name="discipline_id">
+            <option value="">— <%= locale === 'fr' ? 'Toutes' : 'All' %> —</option>
+            <% disciplines.forEach(d => { %><option value="<%= d.id %>"><%= locale === 'fr' ? d.name_fr : d.name_en %></option><% }) %>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label"><%= t(locale, 'organization') %></label>
+          <select name="org_id" required>
+            <% clubs.forEach(c => { %><option value="<%= c.id %>"><%= locale === 'fr' && c.name_fr ? c.name_fr : c.name_en %></option><% }) %>
+          </select>
+        </div>
+        <div class="form-group" style="justify-content:flex-end">
+          <label class="form-check">
+            <input type="checkbox" name="waiver_signed" value="1">
+            <%= t(locale, 'waiver_confirm') %>
+          </label>
+        </div>
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-primary" type="submit"><i class="fa-solid fa-plus"></i> <%= t(locale, 'save') %></button>
+      </div>
     </form>
-  </details>
+  </div>
+</details>
 
-  <section class="panel">
+<div class="card">
+  <div class="card-header">
+    <span class="card-title"><i class="fa-solid fa-list" style="color:var(--red);margin-right:8px"></i><%= t(locale, 'memberships_title') %></span>
+    <span class="badge badge-gray"><%= memberships.length %></span>
+  </div>
+  <div class="card-body table-wrap">
     <table>
       <thead><tr>
         <th><%= t(locale, 'col_name') %></th>
@@ -50,24 +65,26 @@
         <th><%= t(locale, 'col_season') %></th>
         <th><%= t(locale, 'col_membership_type') %></th>
         <th><%= t(locale, 'col_disciplines') %></th>
+        <th>UCI</th>
         <th><%= t(locale, 'col_status') %></th>
-        <th><%= t(locale, 'col_uci') %></th>
       </tr></thead>
       <tbody>
       <% memberships.forEach(ms => { %>
         <tr>
-          <td><%= ms.first_name %> <%= ms.last_name %></td>
+          <td class="td-name"><%= ms.first_name %> <%= ms.last_name %></td>
           <td><%= locale === 'fr' && ms.org_name_fr ? ms.org_name_fr : ms.org_name_en %></td>
           <td><%= ms.season_year %></td>
-          <td><%= t(locale, ms.membership_type) %></td>
-          <td><%= ms.discipline_codes || '—' %></td>
-          <td><span class="status-badge status-<%= ms.status %>"><%= t(locale, ms.status) %></span></td>
-          <td><%= ms.uci_id || '—' %></td>
+          <td><span class="badge badge-gray"><%= t(locale, ms.membership_type) %></span></td>
+          <td><span class="td-muted"><%= ms.discipline_codes || '—' %></span></td>
+          <td><code style="font-size:11px;color:var(--gray-500)"><%= ms.uci_id || '—' %></code></td>
+          <td><span class="badge badge-<%= ms.status %>"><%= t(locale, ms.status) %></span></td>
         </tr>
       <% }) %>
-      <% if (!memberships.length) { %><tr><td colspan="7" class="muted">—</td></tr><% } %>
+      <% if (!memberships.length) { %><tr><td colspan="7" style="text-align:center;padding:32px;color:var(--gray-400)">— <%= locale === 'fr' ? 'Aucune adhésion' : 'No memberships yet' %> —</td></tr><% } %>
       </tbody>
     </table>
-  </section>
-  <p class="footer-note"><%= t(locale, 'footer_note') %></p>
-</main>
+  </div>
+</div>
+
+<p class="footer-note"><i class="fa-solid fa-flask"></i> <%= t(locale, 'footer_note') %></p>
+<%- include('partials/footer') %>

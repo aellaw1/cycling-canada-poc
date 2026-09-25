@@ -1,40 +1,53 @@
 <!DOCTYPE html>
 <html lang="<%= locale %>">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title><%= t(locale, 'app_name_short') %></title>
-<link rel="stylesheet" href="/css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign in — CC National Membership Platform</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300..700;1,14..32,300..700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous">
+  <link rel="stylesheet" href="/css/style.css">
 </head>
-<body class="auth-page">
+<body>
+<div class="auth-page">
   <div class="auth-card">
-    <h1><%= t(locale, 'app_name') %></h1>
-    <h2><%= t(locale, 'login_title') %></h2>
-    <% if (error) { %><p class="error"><%= error %></p><% } %>
-    <form method="POST" action="/login">
-      <label><%= t(locale, 'login_email') %>
-        <input type="email" name="email" required>
-      </label>
-      <label><%= t(locale, 'login_password') %>
-        <input type="password" name="password" required>
-      </label>
-      <button type="submit"><%= t(locale, 'login_submit') %></button>
+    <div class="auth-logo">🚴</div>
+    <h1 class="auth-title"><%= t(locale, 'app_name_short') %></h1>
+    <p class="auth-subtitle"><%= locale === 'fr' ? 'Plateforme nationale d\'adhésion et d\'inscription' : 'National Membership &amp; Registration Platform' %></p>
+
+    <% if (error) { %><div class="auth-error"><i class="fa-solid fa-circle-exclamation"></i> <%= error %></div><% } %>
+
+    <form class="auth-form" method="POST" action="/login">
+      <div class="auth-form-group">
+        <label for="email"><i class="fa-solid fa-envelope"></i> <%= t(locale, 'login_email') %></label>
+        <input id="email" type="email" name="email" required autocomplete="username" placeholder="you@example.com">
+      </div>
+      <div class="auth-form-group">
+        <label for="password"><i class="fa-solid fa-lock"></i> <%= t(locale, 'login_password') %></label>
+        <input id="password" type="password" name="password" required autocomplete="current-password">
+      </div>
+      <button class="auth-submit" type="submit"><i class="fa-solid fa-right-to-bracket"></i> <%= t(locale, 'login_submit') %></button>
     </form>
-    <div class="lang-switch">
-      <form method="POST" action="/locale/en" style="display:inline"><button class="link-btn" type="submit">English</button></form>
-      ·
-      <form method="POST" action="/locale/fr" style="display:inline"><button class="link-btn" type="submit">Français</button></form>
+
+    <div class="auth-locale">
+      <form method="POST" action="/locale/en" style="display:inline"><button type="submit">English</button></form>
+      &nbsp;·&nbsp;
+      <form method="POST" action="/locale/fr" style="display:inline"><button type="submit">Français</button></form>
     </div>
-    <div class="demo-hint">
-      <strong><%= t(locale, 'login_demo_hint') %></strong>
-      <ul>
-        <li>admin@cyclingcanada.demo — CC_ADMIN</li>
-        <li>admin@ontario.demo — PTSO_ADMIN (ON)</li>
-        <li>admin@quebec.demo — PTSO_ADMIN (QC, FR)</li>
-        <li>admin@torontovelo.demo — CLUB_ADMIN</li>
-        <li>member@demo.ca — MEMBER</li>
+
+    <div class="auth-demo">
+      <div class="auth-demo-title"><i class="fa-solid fa-flask"></i> <%= t(locale, 'login_demo_hint') %> — password: <code>demo1234</code></div>
+      <ul class="auth-demo-list">
+        <li><code>admin@cyclingcanada.demo</code> — <strong>CC_ADMIN</strong> (national view)</li>
+        <li><code>admin@ontario.demo</code> — <strong>PTSO_ADMIN</strong> (Ontario only)</li>
+        <li><code>admin@quebec.demo</code> — <strong>PTSO_ADMIN</strong> (Québec · FR)</li>
+        <li><code>admin@torontovelo.demo</code> — <strong>CLUB_ADMIN</strong></li>
+        <li><code>member@demo.ca</code> — <strong>MEMBER</strong></li>
       </ul>
     </div>
   </div>
+</div>
 </body>
 </html>

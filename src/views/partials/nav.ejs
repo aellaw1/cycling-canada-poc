@@ -1,22 +1,91 @@
-<nav class="topnav">
-  <div class="brand"><%= t(locale, 'app_name_short') %></div>
-  <div class="nav-links">
-    <a href="/dashboard"><%= t(locale, 'nav_dashboard') %></a>
-    <a href="/members"><%= t(locale, 'nav_members') %></a>
-    <a href="/memberships"><%= t(locale, 'nav_memberships') %></a>
-    <a href="/events"><%= t(locale, 'nav_events') %></a>
-    <a href="/finance"><%= t(locale, 'nav_finance') %></a>
-    <a href="/compliance"><%= t(locale, 'nav_compliance') %></a>
-    <a href="/orgs"><%= t(locale, 'nav_orgs') %></a>
-    <a href="/audit">Audit</a>
-  </div>
-  <div class="nav-right">
-    <span class="scope-badge"><%= scopeLabel %></span>
-    <form method="POST" action="/locale/<%= locale === 'en' ? 'fr' : 'en' %>" style="display:inline">
-      <button class="link-btn" type="submit"><%= locale === 'en' ? 'FR' : 'EN' %></button>
-    </form>
-    <form method="POST" action="/logout" style="display:inline">
-      <button class="link-btn" type="submit"><%= t(locale, 'nav_logout') %></button>
-    </form>
-  </div>
-</nav>
+<!DOCTYPE html>
+<html lang="<%= locale %>">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CC National Membership Platform</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300..700;1,14..32,300..700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<div class="app-shell">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="sidebar-logo">🚴</div>
+      <div>
+        <span class="sidebar-brand-name"><%= t(locale, 'app_name_short') %></span>
+        <span class="sidebar-brand-tag">National Platform</span>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <span class="nav-section-label"><%= locale === 'fr' ? 'Navigation' : 'Navigation' %></span>
+      <a href="/dashboard" class="sidebar-link <%= locals.activePage === 'dashboard' ? 'active' : '' %>">
+        <i class="fa-solid fa-gauge-high"></i> <%= t(locale, 'nav_dashboard') %>
+      </a>
+      <a href="/members" class="sidebar-link <%= locals.activePage === 'members' ? 'active' : '' %>">
+        <i class="fa-solid fa-users"></i> <%= t(locale, 'nav_members') %>
+      </a>
+      <a href="/memberships" class="sidebar-link <%= locals.activePage === 'memberships' ? 'active' : '' %>">
+        <i class="fa-solid fa-id-card"></i> <%= t(locale, 'nav_memberships') %>
+      </a>
+
+      <span class="nav-section-label" style="margin-top:8px"><%= locale === 'fr' ? 'Activités' : 'Activities' %></span>
+      <a href="/events" class="sidebar-link <%= locals.activePage === 'events' ? 'active' : '' %>">
+        <i class="fa-solid fa-flag-checkered"></i> <%= t(locale, 'nav_events') %>
+      </a>
+      <a href="/compliance" class="sidebar-link <%= locals.activePage === 'compliance' ? 'active' : '' %>">
+        <i class="fa-solid fa-shield-halved"></i> <%= t(locale, 'nav_compliance') %>
+      </a>
+
+      <span class="nav-section-label" style="margin-top:8px"><%= locale === 'fr' ? 'Administration' : 'Administration' %></span>
+      <a href="/finance" class="sidebar-link <%= locals.activePage === 'finance' ? 'active' : '' %>">
+        <i class="fa-solid fa-money-bill-trend-up"></i> <%= t(locale, 'nav_finance') %>
+      </a>
+      <a href="/orgs" class="sidebar-link <%= locals.activePage === 'orgs' ? 'active' : '' %>">
+        <i class="fa-solid fa-sitemap"></i> <%= t(locale, 'nav_orgs') %>
+      </a>
+      <a href="/audit" class="sidebar-link <%= locals.activePage === 'audit' ? 'active' : '' %>">
+        <i class="fa-solid fa-clipboard-list"></i> <%= locale === 'fr' ? 'Journal d\'audit' : 'Audit Log' %>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <% if (user) { %>
+      <div class="sidebar-user">
+        <div class="sidebar-avatar"><%= (user.first_name || 'U')[0].toUpperCase() %></div>
+        <div style="min-width:0">
+          <span class="sidebar-user-name"><%= user.first_name %> <%= user.last_name %></span>
+          <span class="sidebar-user-role"><%= scope ? scope.highestRole : '' %></span>
+        </div>
+      </div>
+      <% } %>
+      <div class="sidebar-btns">
+        <form method="POST" action="/locale/<%= locale === 'en' ? 'fr' : 'en' %>" style="flex:1">
+          <button class="sidebar-btn" type="submit" style="width:100%"><i class="fa-solid fa-language"></i> <%= locale === 'en' ? 'FR' : 'EN' %></button>
+        </form>
+        <form method="POST" action="/logout" style="flex:1">
+          <button class="sidebar-btn" type="submit" style="width:100%"><i class="fa-solid fa-right-from-bracket"></i> <%= t(locale, 'nav_logout') %></button>
+        </form>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN AREA -->
+  <div class="main-area">
+    <header class="topbar">
+      <div class="topbar-scope">
+        <% if (locals.scopeLabel) { %>
+        <span class="scope-badge"><%= scopeLabel %></span>
+        <% } %>
+      </div>
+      <div class="topbar-right">
+        <span class="topbar-live"><i class="fa-solid fa-circle" style="font-size:8px"></i> Live</span>
+      </div>
+    </header>
+    <main class="page-content">

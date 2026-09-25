@@ -1,7 +1,12 @@
 <%- include('partials/nav') %>
-<main class="container">
-  <h1><%= t(locale, 'orgs_title') %></h1>
-  <section class="panel">
+
+<div class="page-header">
+  <h1 class="page-title"><i class="fa-solid fa-sitemap" style="color:var(--red);margin-right:8px"></i><%= t(locale, 'orgs_title') %></h1>
+  <p class="page-subtitle"><%= locale === 'fr' ? 'Cyclisme Canada · PTSOs · Clubs affiliés' : 'Cycling Canada · PTSOs · Affiliated Clubs' %></p>
+</div>
+
+<div class="card">
+  <div class="card-body table-wrap">
     <table>
       <thead><tr>
         <th><%= t(locale, 'col_name') %></th>
@@ -14,17 +19,19 @@
       <tbody>
       <% orgs.forEach(o => { %>
         <tr>
-          <td><%= locale === 'fr' && o.name_fr ? o.name_fr : o.name_en %></td>
-          <td><%= o.org_type %></td>
+          <td class="td-name"><%= locale === 'fr' && o.name_fr ? o.name_fr : o.name_en %></td>
+          <td><span class="badge badge-<%= o.org_type.toLowerCase() %>"><%= o.org_type %></span></td>
           <td><%= o.jurisdiction || '—' %></td>
-          <td><%= o.parent_name_en ? (locale === 'fr' && o.parent_name_fr ? o.parent_name_fr : o.parent_name_en) : '—' %></td>
-          <td><code><%= o.code %></code></td>
-          <td><span class="status-badge status-<%= o.status %>"><%= t(locale, o.status) %></span></td>
+          <td><span class="td-muted"><%= o.parent_name_en ? (locale === 'fr' && o.parent_name_fr ? o.parent_name_fr : o.parent_name_en) : '—' %></span></td>
+          <td><code style="font-size:11px;background:var(--gray-100);padding:2px 6px;border-radius:4px"><%= o.code %></code></td>
+          <td><span class="badge badge-<%= o.status %>"><%= t(locale, o.status) %></span></td>
         </tr>
       <% }) %>
-      <% if (!orgs.length) { %><tr><td colspan="6" class="muted">—</td></tr><% } %>
+      <% if (!orgs.length) { %><tr><td colspan="6" style="text-align:center;padding:32px;color:var(--gray-400)">—</td></tr><% } %>
       </tbody>
     </table>
-  </section>
-  <p class="footer-note"><%= t(locale, 'footer_note') %></p>
-</main>
+  </div>
+</div>
+
+<p class="footer-note"><i class="fa-solid fa-flask"></i> <%= t(locale, 'footer_note') %></p>
+<%- include('partials/footer') %>

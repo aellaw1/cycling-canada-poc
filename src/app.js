@@ -34,11 +34,16 @@ app.use(loadScope);
 // Expose a human-readable "scope label" (e.g. "Ontario Cycling Association
 // (PTSO_ADMIN)") to every authenticated view without repeating logic.
 app.use((req, res, next) => {
+  const locale = req.session.locale || 'en';
+  res.locals.locale = locale;
+  res.locals.t = t;
   if (req.scope && req.scope.primaryOrg) {
-    const locale = req.session.locale || 'en';
-    const name = locale === 'fr' && req.scope.primaryOrg.name_fr ? req.scope.primaryOrg.name_fr : req.scope.primaryOrg.name_en;
+    const name = locale === 'fr' && req.scope.primaryOrg.name_fr
+      ? req.scope.primaryOrg.name_fr : req.scope.primaryOrg.name_en;
     res.locals.scopeLabel = `${name} (${req.scope.highestRole})`;
   }
+  res.locals.user = req.user || null;
+  res.locals.scope = req.scope || null;
   next();
 });
 

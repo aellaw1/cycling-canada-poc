@@ -1,21 +1,29 @@
 <%- include('partials/nav') %>
-<main class="container">
-  <h1><%= t(locale, 'finance_title') %></h1>
 
-  <div class="kpi-grid">
-    <% totals.forEach(tot => { %>
-      <div class="kpi-card">
-        <div class="kpi-value"><%= (tot.total/100).toLocaleString('en-CA', {style:'currency', currency:'CAD'}) %></div>
-        <div class="kpi-label"><%= t(locale, tot.tx_type === 'membership_fee' ? 'nav_memberships' : 'nav_finance') %> (<%= tot.n %>)</div>
-      </div>
-    <% }) %>
+<div class="page-header" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
+  <div>
+    <h1 class="page-title"><i class="fa-solid fa-money-bill-trend-up" style="color:var(--red);margin-right:8px"></i><%= t(locale, 'finance_title') %></h1>
+    <p class="page-subtitle"><%= locale === 'fr' ? 'Rapprochement et export pour systèmes comptables' : 'Reconciliation and export for accounting systems' %></p>
   </div>
+  <a class="btn btn-secondary" href="/finance/export.csv"><i class="fa-solid fa-file-csv"></i> <%= t(locale, 'export_accounting') %></a>
+</div>
 
-  <section class="panel">
-    <div class="panel-header">
-      <h2><%= t(locale, 'finance_title') %></h2>
-      <a class="btn-secondary" href="/finance/export.csv"><%= t(locale, 'export_accounting') %></a>
-    </div>
+<div class="kpi-grid">
+<% totals.forEach(tot => { %>
+  <div class="kpi-card">
+    <div class="kpi-icon" style="background:var(--green-light);color:var(--green)"><i class="fa-solid fa-dollar-sign"></i></div>
+    <div class="kpi-value"><%= (tot.total/100).toLocaleString('en-CA',{style:'currency',currency:'CAD'}) %></div>
+    <div class="kpi-label"><%= tot.tx_type.replace(/_/g,' ') %> (<%= tot.n %>)</div>
+  </div>
+<% }) %>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <span class="card-title"><i class="fa-solid fa-table" style="color:var(--red);margin-right:8px"></i><%= t(locale, 'finance_title') %></span>
+    <span class="badge badge-gray"><%= transactions.length %></span>
+  </div>
+  <div class="card-body table-wrap">
     <table>
       <thead><tr>
         <th><%= t(locale, 'col_name') %></th>
@@ -29,24 +37,24 @@
       <tbody>
       <% transactions.forEach(tx => { %>
         <tr>
-          <td><%= tx.first_name ? `${tx.first_name} ${tx.last_name}` : '—' %></td>
+          <td class="td-name"><%= tx.first_name ? tx.first_name + ' ' + tx.last_name : '—' %></td>
           <td><%= locale === 'fr' && tx.org_name_fr ? tx.org_name_fr : tx.org_name_en %></td>
-          <td><%= (tx.amount_cents/100).toLocaleString('en-CA', {style:'currency', currency: tx.currency}) %></td>
-          <td><%= tx.tx_type %></td>
-          <td><%= tx.reconciled ? t(locale, 'yes') : t(locale, 'no') %></td>
-          <td><%= tx.external_ref || '—' %></td>
-          <td>
-            <% if (!tx.reconciled) { %>
-              <form method="POST" action="/finance/<%= tx.id %>/reconcile">
-                <button class="btn-secondary" type="submit"><%= t(locale, 'mark_reconciled') %></button>
-              </form>
-            <% } %>
-          </td>
+          <td><strong><%= (tx.amount_cents/100).toLocaleString('en-CA',{style:'currency',currency:tx.currency}) %></strong></td>
+          <td><span class="badge badge-gray"><%= tx.tx_type.replace(/_/g,' ') %></span></td>
+          <td><% if (tx.reconciled) { %><span class="badge badge-green"><i class="fa-solid fa-check"></i> <%= t(locale,'yes') %></span><% } else { %><span class="badge badge-amber"><i class="fa-solid fa-clock"></i> <%= t(locale,'no') %></span><% } %></td>
+          <td><span class="td-muted"><%= tx.external_ref || '—' %></span></td>
+          <td><% if (!tx.reconciled) { %>
+            <form method="POST" action="/finance/<%= tx.id %>/reconcile">
+              <button class="btn btn-success btn-sm" type="submit"><i class="fa-solid fa-check"></i> <%= t(locale,'mark_reconciled') %></button>
+            </form>
+          <% } %></td>
         </tr>
       <% }) %>
-      <% if (!transactions.length) { %><tr><td colspan="7" class="muted">—</td></tr><% } %>
+      <% if (!transactions.length) { %><tr><td colspan="7" style="text-align:center;padding:32px;color:var(--gray-400)">—</td></tr><% } %>
       </tbody>
     </table>
-  </section>
-  <p class="footer-note"><%= t(locale, 'footer_note') %></p>
-</main>
+  </div>
+</div>
+
+<p class="footer-note"><i class="fa-solid fa-flask"></i> <%= t(locale, 'footer_note') %></p>
+<%- include('partials/footer') %>
