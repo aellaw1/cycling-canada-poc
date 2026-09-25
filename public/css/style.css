@@ -494,3 +494,53 @@ input:focus, select:focus, textarea:focus {
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border-md); border-radius: var(--r-full); }
 ::-webkit-scrollbar-thumb:hover { background: var(--t3); }
+
+/* =========================================================
+   TOPBAR USER (top-right: avatar + name + role + actions)
+   ========================================================= */
+.topbar-left { display:flex; align-items:center; }
+
+.topbar-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: auto;
+}
+
+.topbar-avatar {
+  width: 32px; height: 32px;
+  background: var(--red);
+  border-radius: var(--r-full);
+  display: flex; align-items: center; justify-content: center;
+  color: white; font-size: 12px; font-weight: 700; flex-shrink: 0;
+}
+
+.topbar-user-info {
+  display: flex; flex-direction: column; align-items: flex-end;
+  line-height: 1.2;
+}
+.topbar-user-name {
+  font-size: 12.5px; font-weight: 700; color: var(--t1);
+  letter-spacing: -.01em; white-space: nowrap;
+}
+.topbar-user-role {
+  font-size: 10px; font-weight: 600; color: var(--red);
+  text-transform: uppercase; letter-spacing: .04em;
+}
+
+.topbar-actions {
+  display: flex; gap: 5px;
+  padding-left: 10px;
+  border-left: 1px solid var(--border);
+  margin-left: 4px;
+}
+
+.topbar-btn {
+  display: inline-flex; align-items: center; gap: 5px;
+  background: var(--surface-2); color: var(--t2);
+  border: 1px solid var(--border-md);
+  padding: 6px 11px; border-radius: var(--r-sm);
+  font-size: 11.5px; font-weight: 600; font-family: inherit;
+  cursor: pointer; transition: all .1s; white-space: nowrap;
+}
+.topbar-btn:hover { background: var(--red); color: white; border-color: var(--red); }
