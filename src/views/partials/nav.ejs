@@ -1,0 +1,22 @@
+<nav class="topnav">
+  <div class="brand"><%= t(locale, 'app_name_short') %></div>
+  <div class="nav-links">
+    <a href="/dashboard"><%= t(locale, 'nav_dashboard') %></a>
+    <a href="/members"><%= t(locale, 'nav_members') %></a>
+    <a href="/memberships"><%= t(locale, 'nav_memberships') %></a>
+    <a href="/events"><%= t(locale, 'nav_events') %></a>
+    <a href="/finance"><%= t(locale, 'nav_finance') %></a>
+    <a href="/compliance"><%= t(locale, 'nav_compliance') %></a>
+    <a href="/orgs"><%= t(locale, 'nav_orgs') %></a>
+    <a href="/audit">Audit</a>
+  </div>
+  <div class="nav-right">
+    <span class="scope-badge"><%= scopeLabel %></span>
+    <form method="POST" action="/locale/<%= locale === 'en' ? 'fr' : 'en' %>" style="display:inline">
+      <button class="link-btn" type="submit"><%= locale === 'en' ? 'FR' : 'EN' %></button>
+    </form>
+    <form method="POST" action="/logout" style="display:inline">
+      <button class="link-btn" type="submit"><%= t(locale, 'nav_logout') %></button>
+    </form>
+  </div>
+</nav>

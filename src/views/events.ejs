@@ -1,0 +1,55 @@
+<%- include('partials/nav') %>
+<main class="container">
+  <h1><%= t(locale, 'events_title') %></h1>
+
+  <details class="new-form">
+    <summary><%= t(locale, 'new_event') %></summary>
+    <form method="POST" action="/events" class="form-grid">
+      <label>EN Name<input name="name_en" required></label>
+      <label>FR Name<input name="name_fr"></label>
+      <label><%= t(locale, 'col_discipline') %>
+        <select name="discipline_id">
+          <option value="">—</option>
+          <% disciplines.forEach(d => { %>
+            <option value="<%= d.id %>"><%= locale === 'fr' ? d.name_fr : d.name_en %></option>
+          <% }) %>
+        </select>
+      </label>
+      <label><%= t(locale, 'col_date') %><input type="date" name="event_date" required></label>
+      <label><%= t(locale, 'organization') %>
+        <select name="org_id" required>
+          <% clubs.forEach(c => { %>
+            <option value="<%= c.id %>"><%= locale === 'fr' && c.name_fr ? c.name_fr : c.name_en %></option>
+          <% }) %>
+        </select>
+      </label>
+      <label class="checkbox-row"><input type="checkbox" name="sanctioned" value="1"> <%= t(locale, 'col_sanctioned') %></label>
+      <div class="form-actions"><button class="btn-primary" type="submit"><%= t(locale, 'save') %></button></div>
+    </form>
+  </details>
+
+  <section class="panel">
+    <table>
+      <thead><tr>
+        <th><%= t(locale, 'col_event') %></th>
+        <th><%= t(locale, 'col_org') %></th>
+        <th><%= t(locale, 'col_discipline') %></th>
+        <th><%= t(locale, 'col_date') %></th>
+        <th><%= t(locale, 'col_sanctioned') %></th>
+      </tr></thead>
+      <tbody>
+      <% events.forEach(e => { %>
+        <tr>
+          <td><%= locale === 'fr' && e.name_fr ? e.name_fr : e.name_en %></td>
+          <td><%= locale === 'fr' && e.org_name_fr ? e.org_name_fr : e.org_name_en %></td>
+          <td><%= e.disc_en ? (locale === 'fr' ? e.disc_fr : e.disc_en) : '—' %></td>
+          <td><%= e.event_date %></td>
+          <td><%= e.sanctioned ? t(locale, 'yes') : t(locale, 'no') %></td>
+        </tr>
+      <% }) %>
+      <% if (!events.length) { %><tr><td colspan="5" class="muted">—</td></tr><% } %>
+      </tbody>
+    </table>
+  </section>
+  <p class="footer-note"><%= t(locale, 'footer_note') %></p>
+</main>

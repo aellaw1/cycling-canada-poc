@@ -1,0 +1,26 @@
+<%- include('partials/nav') %>
+<main class="container">
+  <h1><%= t(locale, 'audit_log_title') %></h1>
+  <section class="panel">
+    <table>
+      <thead><tr>
+        <th><%= t(locale, 'col_when') %></th>
+        <th><%= t(locale, 'col_actor') %></th>
+        <th><%= t(locale, 'col_action') %></th>
+        <th><%= t(locale, 'col_entity') %></th>
+      </tr></thead>
+      <tbody>
+      <% logs.forEach(l => { %>
+        <tr>
+          <td><%= l.created_at %></td>
+          <td><%= l.first_name ? `${l.first_name} ${l.last_name}` : (l.email || '—') %></td>
+          <td><%= l.action %></td>
+          <td><%= l.entity_type %><%= l.entity_id ? ' #' + l.entity_id : '' %></td>
+        </tr>
+      <% }) %>
+      <% if (!logs.length) { %><tr><td colspan="4" class="muted">—</td></tr><% } %>
+      </tbody>
+    </table>
+  </section>
+  <p class="footer-note"><%= t(locale, 'footer_note') %></p>
+</main>

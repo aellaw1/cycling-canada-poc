@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="<%= locale %>">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title><%= t(locale, 'app_name_short') %></title>
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="auth-page">
+  <div class="auth-card">
+    <h1><%= t(locale, 'app_name') %></h1>
+    <h2><%= t(locale, 'login_title') %></h2>
+    <% if (error) { %><p class="error"><%= error %></p><% } %>
+    <form method="POST" action="/login">
+      <label><%= t(locale, 'login_email') %>
+        <input type="email" name="email" required>
+      </label>
+      <label><%= t(locale, 'login_password') %>
+        <input type="password" name="password" required>
+      </label>
+      <button type="submit"><%= t(locale, 'login_submit') %></button>
+    </form>
+    <div class="lang-switch">
+      <form method="POST" action="/locale/en" style="display:inline"><button class="link-btn" type="submit">English</button></form>
+      ·
+      <form method="POST" action="/locale/fr" style="display:inline"><button class="link-btn" type="submit">Français</button></form>
+    </div>
+    <div class="demo-hint">
+      <strong><%= t(locale, 'login_demo_hint') %></strong>
+      <ul>
+        <li>admin@cyclingcanada.demo — CC_ADMIN</li>
+        <li>admin@ontario.demo — PTSO_ADMIN (ON)</li>
+        <li>admin@quebec.demo — PTSO_ADMIN (QC, FR)</li>
+        <li>admin@torontovelo.demo — CLUB_ADMIN</li>
+        <li>member@demo.ca — MEMBER</li>
+      </ul>
+    </div>
+  </div>
+</body>
+</html>

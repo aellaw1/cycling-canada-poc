@@ -1,0 +1,30 @@
+<%- include('partials/nav') %>
+<main class="container">
+  <h1><%= t(locale, 'orgs_title') %></h1>
+  <section class="panel">
+    <table>
+      <thead><tr>
+        <th><%= t(locale, 'col_name') %></th>
+        <th><%= t(locale, 'col_org_type') %></th>
+        <th><%= t(locale, 'col_jurisdiction') %></th>
+        <th><%= t(locale, 'col_parent') %></th>
+        <th>Code</th>
+        <th><%= t(locale, 'col_status') %></th>
+      </tr></thead>
+      <tbody>
+      <% orgs.forEach(o => { %>
+        <tr>
+          <td><%= locale === 'fr' && o.name_fr ? o.name_fr : o.name_en %></td>
+          <td><%= o.org_type %></td>
+          <td><%= o.jurisdiction || '—' %></td>
+          <td><%= o.parent_name_en ? (locale === 'fr' && o.parent_name_fr ? o.parent_name_fr : o.parent_name_en) : '—' %></td>
+          <td><code><%= o.code %></code></td>
+          <td><span class="status-badge status-<%= o.status %>"><%= t(locale, o.status) %></span></td>
+        </tr>
+      <% }) %>
+      <% if (!orgs.length) { %><tr><td colspan="6" class="muted">—</td></tr><% } %>
+      </tbody>
+    </table>
+  </section>
+  <p class="footer-note"><%= t(locale, 'footer_note') %></p>
+</main>

@@ -1,0 +1,74 @@
+<%- include('partials/nav') %>
+<main class="container">
+  <h1><%= t(locale, 'dashboard_title') %></h1>
+  <p class="muted"><%= t(locale, 'dashboard_scope') %>: <strong><%= scopeLabel %></strong></p>
+
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-value"><%= kpis.totalMembers %></div>
+      <div class="kpi-label"><%= t(locale, 'kpi_total_members') %></div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-value"><%= kpis.activeMemberships %></div>
+      <div class="kpi-label"><%= t(locale, 'kpi_active_memberships') %></div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-value"><%= fmtMoney(kpis.revenueYtd) %></div>
+      <div class="kpi-label"><%= t(locale, 'kpi_revenue_ytd') %></div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-value"><%= kpis.pendingCompliance %></div>
+      <div class="kpi-label"><%= t(locale, 'kpi_pending_compliance') %></div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-value"><%= kpis.uciIssued %></div>
+      <div class="kpi-label"><%= t(locale, 'kpi_uci_licences') %></div>
+    </div>
+  </div>
+
+  <% if (childOrgs.length) { %>
+  <section class="panel">
+    <h2><%= t(locale, 'child_orgs') %></h2>
+    <table>
+      <thead><tr><th><%= t(locale, 'col_name') %></th><th><%= t(locale, 'col_org_type') %></th><th><%= t(locale, 'col_jurisdiction') %></th></tr></thead>
+      <tbody>
+      <% childOrgs.forEach(o => { %>
+        <tr>
+          <td><%= locale === 'fr' && o.name_fr ? o.name_fr : o.name_en %></td>
+          <td><%= o.org_type %></td>
+          <td><%= o.jurisdiction || '—' %></td>
+        </tr>
+      <% }) %>
+      </tbody>
+    </table>
+  </section>
+  <% } %>
+
+  <section class="panel">
+    <div class="panel-header">
+      <h2><%= t(locale, 'recent_registrations') %></h2>
+      <a class="btn-secondary" href="/finance/export.csv"><%= t(locale, 'export_csv') %></a>
+    </div>
+    <table>
+      <thead><tr>
+        <th><%= t(locale, 'col_name') %></th>
+        <th><%= t(locale, 'col_org') %></th>
+        <th><%= t(locale, 'col_season') %></th>
+        <th><%= t(locale, 'col_membership_type') %></th>
+      </tr></thead>
+      <tbody>
+      <% recentRegistrations.forEach(r => { %>
+        <tr>
+          <td><%= r.first_name %> <%= r.last_name %></td>
+          <td><%= locale === 'fr' && r.org_name_fr ? r.org_name_fr : r.org_name %></td>
+          <td><%= r.season_year %></td>
+          <td><%= t(locale, r.membership_type) %></td>
+        </tr>
+      <% }) %>
+      <% if (!recentRegistrations.length) { %><tr><td colspan="4" class="muted">—</td></tr><% } %>
+      </tbody>
+    </table>
+  </section>
+
+  <p class="footer-note"><%= t(locale, 'footer_note') %></p>
+</main>
